@@ -3,7 +3,7 @@
         <div class="flex h-16 items-center justify-between">
             <div class="flex items-center">
                 <div class="flex-shrink-0">
-                    <img class="h-8 w-8" src="/php.svg" alt="Your Company">
+                    <img class="h-8 w-8" src="<?= asset('images/php.svg') ?>" alt="Your Company">
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
@@ -13,9 +13,13 @@
                         <a href="/about" class="rounded-md <?= urlIs('/about') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' ?> px-3 py-2 text-sm font-medium">
                             About Us
                         </a>
-                        <a href="/notes" class="rounded-md <?= urlIs('/notes') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' ?> px-3 py-2 text-sm font-medium">
-                            Notes
-                        </a>
+
+                        <?php if (isset($_SESSION['user'])): ?>
+                            <a href="/notes" class="rounded-md <?= urlIs('/notes') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' ?> px-3 py-2 text-sm font-medium">
+                                Notes
+                            </a>
+                        <?php endif; ?>
+
                         <a href="/contact" class="rounded-md <?= urlIs('/contact') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' ?> px-3 py-2 text-sm font-medium">
                             Contact Us
                         </a>
@@ -39,12 +43,12 @@
                                 <button type="button" class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                     <span class="absolute -inset-1.5"></span>
                                     <span class="sr-only">Open User Menu</span>
-                                    <img class="h-8 w-8 rounded-full" src="/people.svg" alt="">
+                                    <img class="h-8 w-8 rounded-full" src="<?= asset('images/people.svg') ?>" alt="">
                                 </button>
                             </div>
                         <?php else: ?>
                             <div>
-                                <a href="/register" class="text-white">Register</a>
+                                <a href="/login" class="text-white">Login</a>
                             </div>
                         <?php endif; ?>
 
@@ -59,7 +63,7 @@
                             To: "transform opacity-0 scale-95"
                         -->
 
-                        <div class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none invisible" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                        <div class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transform opacity-0 scale-95 transition duration-100 ease-out" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" id="dropdown-menu">
                             <!-- Active: "bg-gray-100", Not Active: "" -->
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">
                                 Your Profile
@@ -67,9 +71,12 @@
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">
                                 Settings
                             </a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">
-                                Sign Out
-                            </a>
+                            <form action="/logout" method="post">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">
+                                    Log Out
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>

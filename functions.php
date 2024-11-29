@@ -31,7 +31,22 @@ function authorize($condition, $status = Response::FORBIDDEN): void
 
 function view($path, $attributes = []): void
 {
-    extract($attributes);
+    $file = base_path("views/$path");
 
-    require base_path('views/' . $path);
+    if (!file_exists($file)) {
+        echo "View $path does not exist";
+        die();
+    }
+
+    extract($attributes);
+    require $file;
+}
+
+function asset($path): string
+{
+    $scheme       = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $host         = $_SERVER['HTTP_HOST'];
+    $sanitizePath = ltrim($path, '/');
+
+    return "$scheme://$host/$sanitizePath";
 }

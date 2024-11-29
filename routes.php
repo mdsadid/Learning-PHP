@@ -16,6 +16,13 @@ $router->group(['middleware' => 'auth'], function ($router) {
 $router->get('/contact', 'controllers/contact.php');
 
 $router->group(['middleware' => 'guest'], function ($router) {
+    $router->get('/login', 'controllers/login/index.php');
+    $router->post('/login', 'controllers/login/store.php');
+});
+
+$router->delete('/logout', 'controllers/login/destroy.php')->only('auth');
+
+$router->group(['middleware' => 'guest'], function ($router) {
     $router->get('/register', 'controllers/registration/index.php');
     $router->post('/register', 'controllers/registration/store.php');
 });

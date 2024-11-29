@@ -33,4 +33,9 @@ class Validator
 
         return !$result;
     }
+
+    public static function confirmed($password, $confirmPassword): bool
+    {
+        return $password !== $confirmPassword;
+    }
 }

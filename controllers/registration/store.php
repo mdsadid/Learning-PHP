@@ -4,8 +4,9 @@ use Core\App;
 use Core\Database;
 use Core\Validator;
 
-$email    = $_POST['email'];
-$password = $_POST['password'];
+$email           = $_POST['email'];
+$password        = $_POST['password'];
+$confirmPassword = $_POST['confirm_password'];
 
 $errors = [];
 
@@ -23,6 +24,8 @@ if (Validator::required($password)) {
     $errors['password'] = 'The password must be at least 5 characters';
 } elseif (Validator::max($password, 10)) {
     $errors['password'] = 'The password must be at most 10 characters';
+} elseif (Validator::confirmed($password, $confirmPassword)) {
+    $errors['password'] = 'The password confirmation does not match';
 }
 
 if (!empty($errors)) {
@@ -34,7 +37,7 @@ if (!empty($errors)) {
 
     $db->query('INSERT INTO users (email, password) VALUES (:email, :password)', [
         'email'    => $email,
-        'password' => password_hash($password, PASSWORD_DEFAULT)
+        'password' => password_hash($password, PASSWORD_BCRYPT)
     ]);
 
     // mark the user as logged-in

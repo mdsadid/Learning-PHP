@@ -7,7 +7,7 @@ class Auth
     public function handle(): void
     {
         if (!isset($_SESSION['user'])) {
-            header('location: /register');
+            header('location: /login');
             exit();
         }
     }
