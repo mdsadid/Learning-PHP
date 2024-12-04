@@ -35,6 +35,5 @@ if (!empty($errors)) {
         'id'   => $note['id']
     ]);
 
-    header('Location: /notes');
-    exit();
+    redirect('/notes');
 }

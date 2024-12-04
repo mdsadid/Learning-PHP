@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Optional: Close dropdown if clicked outside
     document.addEventListener("click", (e) => {
-        if (!userMenuButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        if (userMenuButton && !userMenuButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
             dropdownMenu.classList.remove("opacity-100", "scale-100");
             dropdownMenu.classList.add("opacity-0", "scale-95");
         }

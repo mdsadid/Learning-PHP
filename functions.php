@@ -1,8 +1,9 @@
 <?php
 
 use Core\Response;
+use JetBrains\PhpStorm\NoReturn;
 
-function dd($value): void
+#[NoReturn] function dd($value): void
 {
     echo '<pre>';
     var_dump($value);
@@ -15,7 +16,7 @@ function urlIs($value): bool
     return $_SERVER['REQUEST_URI'] === $value;
 }
 
-function abort($code = Response::NOT_FOUND): void
+#[NoReturn] function abort($code = Response::NOT_FOUND): void
 {
     http_response_code($code);
 
@@ -49,4 +50,10 @@ function asset($path): string
     $sanitizePath = ltrim($path, '/');
 
     return "$scheme://$host/$sanitizePath";
+}
+
+#[NoReturn] function redirect($path): void
+{
+    header("Location: $path");
+    die();
 }

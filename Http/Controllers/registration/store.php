@@ -45,6 +45,5 @@ if (!empty($errors)) {
         'email' => $email,
     ];
 
-    header('Location: /');
-    exit();
+    redirect('/');
 }

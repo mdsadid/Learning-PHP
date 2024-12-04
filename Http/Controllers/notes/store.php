@@ -26,6 +26,5 @@ if (!empty($errors)) {
         'user_id' => 3,
     ]);
 
-    header('Location: /notes');
-    exit();
+    redirect('/notes');
 }
