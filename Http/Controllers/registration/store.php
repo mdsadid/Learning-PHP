@@ -1,49 +1,40 @@
 <?php
 
 use Core\App;
+use Core\Authenticator;
 use Core\Database;
-use Core\Validator;
+use Core\Session;
+use Http\Requests\RegistrationRequest;
 
 $email           = $_POST['email'];
 $password        = $_POST['password'];
 $confirmPassword = $_POST['confirm_password'];
 
-$errors = [];
+Session::flash('old', [
+    'email' => $email,
+]);
 
-if (Validator::required($email)) {
-    $errors['email'] = 'The email field is required';
-} elseif (!Validator::email($email)) {
-    $errors['email'] = 'The email must be a valid email address';
-} elseif (!Validator::unique('users', 'email', $email)) {
-    $errors['email'] = 'The email has already been taken';
+$request = new RegistrationRequest();
+$data    = compact('email', 'password', 'confirmPassword');
+
+if (!$request->validate($data)) {
+    Session::flash('errors', $request->errors());
+
+    redirect('/register');
 }
 
-if (Validator::required($password)) {
-    $errors['password'] = 'The password field is required';
-} elseif (Validator::min($password, 5)) {
-    $errors['password'] = 'The password must be at least 5 characters';
-} elseif (Validator::max($password, 10)) {
-    $errors['password'] = 'The password must be at most 10 characters';
-} elseif (Validator::confirmed($password, $confirmPassword)) {
-    $errors['password'] = 'The password confirmation does not match';
-}
+$db = App::retrieve(Database::class);
 
-if (!empty($errors)) {
-    view('registration/index.view.php', [
-        'errors' => $errors
-    ]);
-} else {
-    $db = App::retrieve(Database::class);
+$db->query('INSERT INTO users (email, password) VALUES (:email, :password)', [
+    'email'    => $email,
+    'password' => password_hash($password, PASSWORD_BCRYPT)
+]);
 
-    $db->query('INSERT INTO users (email, password) VALUES (:email, :password)', [
-        'email'    => $email,
-        'password' => password_hash($password, PASSWORD_BCRYPT)
-    ]);
+// mark the user as logged-in
+$user = $db->query('SELECT * FROM users WHERE email = :email', [
+    'email' => $email
+])->first();
 
-    // mark the user as logged-in
-    $_SESSION['user'] = [
-        'email' => $email,
-    ];
+(new Authenticator)->login($user);
 
-    redirect('/');
-}
+redirect('/');
