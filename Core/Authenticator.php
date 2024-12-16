@@ -12,7 +12,7 @@ class Authenticator
         ])->first();
 
         if ($user && password_verify($password, $user['password'])) {
-            $this->login($email);
+            $this->login($user);
 
             return true;
         }
@@ -20,11 +20,9 @@ class Authenticator
         return false;
     }
 
-    public function login($email): void
+    public function login($user): void
     {
-        $_SESSION['user'] = [
-            'email' => $email,
-        ];
+        $_SESSION['user'] = $user;
 
         session_regenerate_id(true);
     }

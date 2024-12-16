@@ -4,12 +4,13 @@ namespace Http\Requests;
 
 use Core\Validator;
 
-class LoginRequest
+class LoginRequest extends FormRequest
 {
-    protected array $errors = [];
-
-    public function validate($email, $password): bool
+    public function validate(array $data): bool
     {
+        $email    = $data['email'] ?? null;
+        $password = $data['password'] ?? null;
+
         if (Validator::required($email)) {
             $this->errors['email'] = 'The email field is required';
         }
@@ -19,10 +20,5 @@ class LoginRequest
         }
 
         return empty($this->errors);
-    }
-
-    public function errors(): array
-    {
-        return $this->errors;
     }
 }

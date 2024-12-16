@@ -2,29 +2,28 @@
 
 use Core\App;
 use Core\Database;
-use Core\Validator;
+use Core\Session;
+use Http\Requests\NoteRequest;
 
-$db     = App::retrieve(Database::class);
-$errors = [];
+$body = $_POST['body'];
+$data = compact('body');
 
-if (Validator::required($_POST['body'])) {
-    $errors['body'] = 'Body is required';
+Session::flash('old', $data);
+
+$request = new NoteRequest();
+
+if (!$request->validate($data)) {
+    Session::flash('errors', $request->errors());
+
+    redirect('/notes/create');
 }
 
-if (Validator::max($_POST['body'], 1000)) {
-    $errors['body'] = 'The body cannot be more than 1,000 characters';
-}
+$db         = App::retrieve(Database::class);
+$authUserId = $_SESSION['user']['id'];
 
-if (!empty($errors)) {
-    view('notes/create.view.php', [
-        'heading' => 'Create Note',
-        'errors'  => $errors,
-    ]);
-} else {
-    $db->query('INSERT INTO notes (body, user_id) VALUES (:body, :user_id)', [
-        'body'    => $_POST['body'],
-        'user_id' => 3,
-    ]);
+$db->query('INSERT INTO notes (body, user_id) VALUES (:body, :user_id)', [
+    'body'    => $body,
+    'user_id' => $authUserId,
+]);
 
-    redirect('/notes');
-}
+redirect('/notes');

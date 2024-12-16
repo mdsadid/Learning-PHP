@@ -13,12 +13,12 @@
                 <div>
                     <label for="email" class="block text-sm/6 font-medium text-gray-900">Email Address</label>
                     <div class="mt-2">
-                        <input id="email" name="email" value="<?= $_POST['email'] ?? '' ?>" type="email" autocomplete="email" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6">
+                        <input id="email" name="email" value="<?= old('email') ?>" type="email" autocomplete="email" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6">
                     </div>
 
-                    <?php if(isset($errors['email'])) : ?>
+                    <?php if(errors('email')) : ?>
                         <p class="mt-2 text-red-500">
-                            <?= $errors['email'] ?>
+                            <?= errors('email') ?>
                         </p>
                     <?php endif; ?>
                 </div>
@@ -28,9 +28,9 @@
                         <input id="password" name="password" type="password" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6">
                     </div>
 
-                    <?php if(isset($errors['password'])) : ?>
+                    <?php if(errors('password')) : ?>
                         <p class="mt-2 text-red-500">
-                            <?= $errors['password'] ?>
+                            <?= errors('password') ?>
                         </p>
                     <?php endif; ?>
                 </div>

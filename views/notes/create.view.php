@@ -13,11 +13,11 @@
                     <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                         <div class="col-span-full">
                             <label for="body" class="block text-md font-medium leading-6 text-gray-900 mb-2">Note Body</label>
-                            <textarea id="body" name="body" rows="6" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-md sm:leading-6" placeholder="Enter your new note here..." required><?= $_POST['body'] ?? '' ?></textarea>
+                            <textarea id="body" name="body" rows="6" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-md sm:leading-6" placeholder="Enter your new note here..." required><?= old('body') ?></textarea>
 
-                            <?php if(isset($errors['body'])) : ?>
+                            <?php if(errors('body')) : ?>
                                 <p class="mt-2 text-red-500">
-                                    <?= $errors['body'] ?>
+                                    <?= errors('body') ?>
                                 </p>
                             <?php endif; ?>
                         </div>

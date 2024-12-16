@@ -2,38 +2,35 @@
 
 use Core\App;
 use Core\Database;
-use Core\Validator;
+use Core\Session;
+use Http\Requests\NoteRequest;
 
-$db            = App::retrieve(Database::class);
-$currentUserId = 3;
+$id   = $_POST['id'];
+$body = $_POST['body'];
+$data = compact('body');
+
+Session::flash('old', $data);
+
+$request = new NoteRequest();
+
+if (!$request->validate($data)) {
+    Session::flash('errors', $request->errors());
+
+    redirect("/notes/edit?id=$id");
+}
+
+$db         = App::retrieve(Database::class);
+$authUserId = $_SESSION['user']['id'];
 
 $note = $db->query('SELECT * FROM notes WHERE id = :id', [
-    'id' => $_POST['id']
+    'id' => $id
 ])->firstOrFail();
 
-authorize($note['user_id'] === $currentUserId);
+authorize($note['user_id'] === $authUserId);
 
-$errors = [];
+$db->query('UPDATE notes SET body = :body WHERE id = :id', [
+    'body' => $body,
+    'id'   => $id
+]);
 
-if (Validator::required($_POST['body'])) {
-    $errors['body'] = 'Body is required';
-}
-
-if (Validator::max($_POST['body'], 1000)) {
-    $errors['body'] = 'The body cannot be more than 1,000 characters';
-}
-
-if (!empty($errors)) {
-    view('notes/edit.view.php', [
-        'heading' => 'Edit Note',
-        'note'    => $note,
-        'errors'  => $errors,
-    ]);
-} else {
-    $db->query('UPDATE notes SET body = :body WHERE id = :id', [
-        'body' => $_POST['body'],
-        'id'   => $note['id']
-    ]);
-
-    redirect('/notes');
-}
+redirect("/note?id=$id");

@@ -1,6 +1,7 @@
 <?php
 
 use Core\Response;
+use Core\Session;
 use JetBrains\PhpStorm\NoReturn;
 
 #[NoReturn] function dd($value): void
@@ -56,4 +57,14 @@ function asset($path): string
 {
     header("Location: $path");
     die();
+}
+
+function old($key, $default = '')
+{
+    return Session::get('old')[$key] ?? $default;
+}
+
+function errors($key)
+{
+    return Session::get('errors')[$key];
 }

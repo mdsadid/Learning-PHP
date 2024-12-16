@@ -7,9 +7,14 @@ use Http\Requests\LoginRequest;
 $email    = $_POST['email'];
 $password = $_POST['password'];
 
-$request = new LoginRequest();
+Session::flash('old', [
+    'email' => $email,
+]);
 
-if (!$request->validate($email, $password)) {
+$request = new LoginRequest();
+$data    = compact('email', 'password');
+
+if (!$request->validate($data)) {
     Session::flash('errors', $request->errors());
 
     redirect('/login');
