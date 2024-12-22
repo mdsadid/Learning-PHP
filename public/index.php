@@ -2,6 +2,7 @@
 
 session_start();
 
+use Core\Exceptions\ValidationException;
 use Core\Router;
 use Core\Session;
 
@@ -28,6 +29,13 @@ require base_path('routes.php');
 $uri    = filter_var(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), FILTER_SANITIZE_URL);
 $method = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];
 
-$router->route($uri, $method);
+try {
+    $router->route($uri, $method);
+} catch (ValidationException $exception) {
+    Session::flash('errors', $exception->errors);
+    Session::flash('old', $exception->old);
+
+    $router->back();
+}
 
 Session::expire();

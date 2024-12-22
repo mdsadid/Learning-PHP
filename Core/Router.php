@@ -4,6 +4,7 @@ namespace Core;
 
 use Core\Middleware\MiddlewareResolver;
 use Exception;
+use JetBrains\PhpStorm\NoReturn;
 
 class Router
 {
@@ -12,6 +13,18 @@ class Router
     public function get($uri, $controller): static
     {
         return $this->register($uri, $controller, 'GET');
+    }
+
+    protected function register($uri, $controller, $method): static
+    {
+        $this->routes[] = [
+            'uri'        => $uri,
+            'controller' => $controller,
+            'method'     => $method,
+            'middleware' => null
+        ];
+
+        return $this;
     }
 
     public function post($uri, $controller): static
@@ -34,18 +47,6 @@ class Router
         return $this->register($uri, $controller, 'DELETE');
     }
 
-    protected function register($uri, $controller, $method): static
-    {
-        $this->routes[] = [
-            'uri'        => $uri,
-            'controller' => $controller,
-            'method'     => $method,
-            'middleware' => null
-        ];
-
-        return $this;
-    }
-
     public function route($uri, $method)
     {
         foreach ($this->routes as $route) {
@@ -64,6 +65,11 @@ class Router
         abort();
 
         return null;
+    }
+
+    #[NoReturn] public function back(): void
+    {
+        redirect($_SERVER['HTTP_REFERER']);
     }
 
     public function only(string $key): void

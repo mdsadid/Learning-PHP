@@ -7,25 +7,18 @@ use Http\Requests\LoginRequest;
 $email    = $_POST['email'];
 $password = $_POST['password'];
 
-Session::flash('old', [
-    'email' => $email,
-]);
+LoginRequest::validate(
+    compact('email', 'password')
+);
 
-$request = new LoginRequest();
-$data    = compact('email', 'password');
+$loggedIn = (new Authenticator)->attempt($email, $password);
 
-if (!$request->validate($data)) {
-    Session::flash('errors', $request->errors());
+if (!$loggedIn) {
+    Session::flash('errors', [
+        'email' => 'No matching account found for this email and password'
+    ]);
 
     redirect('/login');
 }
 
-if ((new Authenticator)->attempt($email, $password)) {
-    redirect('/');
-}
-
-Session::flash('errors', [
-    'email' => 'No matching account found for this email and password'
-]);
-
-redirect('/login');
+redirect('/');
