@@ -36,6 +36,6 @@ class Validator
 
     public static function confirmed($password, $confirmPassword): bool
     {
-        return $password !== $confirmPassword;
+        return $password === $confirmPassword;
     }
 }

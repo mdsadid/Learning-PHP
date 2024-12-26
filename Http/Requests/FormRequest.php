@@ -2,19 +2,33 @@
 
 namespace Http\Requests;
 
-abstract class FormRequest
+use Core\Exceptions\ValidationException;
+
+class FormRequest
 {
     protected array $errors = [];
 
-    abstract public static function validate(array $data);
-
-    public function errors(): array
+    /**
+     * @throws ValidationException
+     */
+    public static function validate(array $data): static
     {
-        return $this->errors;
+        $instance = new static($data);
+
+        if ($instance->failed()) {
+            ValidationException::throw($instance->errors(), $instance->attributes);
+        }
+
+        return $instance;
     }
 
     public function failed(): int
     {
         return count($this->errors);
+    }
+
+    public function errors(): array
+    {
+        return $this->errors;
     }
 }
