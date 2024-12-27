@@ -1,0 +1,16 @@
+{
+    "name": "sadid/website",
+    "authors": [
+        {
+            "name": "Sadid Hasan Rakib",
+            "email": "sadid.hasan14@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Core\\": "Core",
+            "Http\\": "Http"
+        }
+    }
+}

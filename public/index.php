@@ -13,12 +13,7 @@ function base_path($path): string
     return BASE_PATH . $path;
 }
 
-spl_autoload_register(function ($class) {
-    $qualifiedClassName = str_replace('\\', DIRECTORY_SEPARATOR, $class);
-
-    require base_path("$qualifiedClassName.php");
-});
-
+require base_path('vendor/autoload.php');
 require base_path('functions.php');
 require base_path('bootstrap.php');
 
